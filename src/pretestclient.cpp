@@ -10,7 +10,7 @@
 #include<netinet/in.h>
 #include<arpa/inet.h>
 #include<string.h>
-static const char* request="GET http://localhost/index.html HTTP/1.1\r\nConnection:; keep5-alive\r\n\r\nxxxxxxxxx";
+static const char* request="GET http://localhost/index.html HTTP/1.1\r\nConnection: keep-alive\r\n\r\nxxxxxxxxx";
 int setnonblocking(int fd){
     int old_option=fcntl(fd,F_GETFL);
     int new_option=old_option|O_NONBLOCK;

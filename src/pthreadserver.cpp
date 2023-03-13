@@ -80,7 +80,7 @@ int main(int argc,char*argv[]){
 
 		for (int i = 0; i < number; i++) {
 			int sockfd = events[i].data.fd;
-			//说明有一个新的连接
+			
 			if (sockfd == listenfd) {
 				struct sockaddr_in client_address;
 				socklen_t client_addrlength = sizeof(client_address);
@@ -89,21 +89,21 @@ int main(int argc,char*argv[]){
 					printf("accept failure! errno is %s\n.", errno);
 					continue;
 				}
-				//如果有MAX_FD个连接了，返回500错误表示服务器繁忙
+				
 				if (http_conn::m_user_count >= MAX_FD) {
 					show_error(connfd, "Internal server busy");
 					continue;
 				}
-				//用文件描述符唯一索引
+				
 				users[connfd].init(connfd, client_address);
 			}
-			//如果有异常，直接关闭客户连接
+			
 			else if (events[i].events & (EPOLLHUP | EPOLLRDHUP | EPOLLERR)) {
 				users[sockfd].close_conn();
 			}
 			//读事件
 			else if (events[i].events & (EPOLLIN)) {
-				//根据读的结果，决定是将任务添加到线程池，还是关闭连接
+				
 				if (users[sockfd].read()) {
                     printf("duqunbaowen\n");
 					pool->append(users + sockfd);
@@ -115,7 +115,7 @@ int main(int argc,char*argv[]){
 			//写事件
 			else if (events[i].events & (EPOLLOUT)) {
 				if (users[sockfd].write()) {
-					//可以在今后添加写事件完成后的逻辑，现在暂时不需要
+					
 				}
 				else {
 					users[sockfd].close_conn();
